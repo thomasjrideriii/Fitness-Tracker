@@ -3,6 +3,7 @@ const mongoose = require("mongoose")
 const logger = require("morgan")
 const db = require("./models")
 const path = require("path")
+const { Workout } = require("./models")
 
 
 const PORT = process.env.PORT || 3000;
@@ -46,9 +47,45 @@ app.get("/api/workouts", (req, res) => {
     })
 })
 
+app.post("/api/workouts", (req, res) => {
+    const workout = new Workout(req.body);
 
+    Workout.create(workout)
+    .then(dbWorkout => {
+        res.json(dbWorkout)
+    })
+    .catch(err => {
+        res.json(err)
+    })
+})
 
+app.get("/api/workouts/range", (req, res) => {
+    db.Workout.find({})
+    .then((dbWorkout) => {
+        res.json(dbWorkout)
+    })
+    .catch((err) => {
+        res.json(err)
+    })
+})
 
+app.put("/api/workouts/:id", (req, res) => {
+    
+    
+
+    db.Workout.update(
+        {
+            _id: req.params.id
+        },
+
+        updatedExersize,
+
+        (err, data) => {
+            if (err) res.json(err);
+            else res.json(data)
+        }
+    )
+})
 
 // Listener
 app.listen(PORT, () => {
