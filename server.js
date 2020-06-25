@@ -71,20 +71,28 @@ app.get("/api/workouts/range", (req, res) => {
 
 app.put("/api/workouts/:id", (req, res) => {
     
-    
-
-    db.Workout.update(
-        {
-            _id: req.params.id
-        },
-
-        updatedExersize,
-
-        (err, data) => {
-            if (err) res.json(err);
-            else res.json(data)
-        }
-    )
+    db.Workout.find({ _id: req.params.id})
+    .then(oldWorkout => {
+        let  newExercise = req.body
+        // console.log(oldWorkout)
+        // console.log(newExercise)
+        oldWorkout[0].exercises.push(newExercise)
+        let updatedWorkout = oldWorkout[0]
+        
+        // console.log(updatedWorkout)
+        db.Workout.update(
+            {
+                _id: req.params.id
+            },
+            
+            updatedWorkout,
+            
+            (err, data) => {
+                if (err) res.json(err);
+                else res.json(data)
+            }
+            )
+        })
 })
 
 // Listener
